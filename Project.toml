@@ -3,7 +3,12 @@ uuid = "fff9f7e9-9b5c-4f84-8dc9-6301a720d115"
 authors = ["aaron-wheeler"]
 version = "0.1.0"
 
+[deps]
+Brokerage = "c5a525f6-2ca2-4903-bddc-b4106679d02b"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+
 [compat]
+Distributions = "0.25"
 julia = "1"
 
 [extras]
