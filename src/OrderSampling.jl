@@ -1,4 +1,4 @@
-using Brokerage, Distributions
+using Brokerage, Distributions, Random
 
 function zero_trade(rounds, num_agents, num_MM, assets, stock_prices, num_assets)
     # instantiate Pareto distribution for trader activation
@@ -42,9 +42,11 @@ end
 function place_order(ticker, share_amount, id)
     if share_amount < 0.0
         fill_amount = abs(share_amount)
+        order_id = 1111 # arbitrary (for now)
         Client.placeMarketOrder(ticker,order_id,"SELL_ORDER",fill_amount,id)
     elseif share_amount > 0.0
         fill_amount = share_amount
+        order_id = 1111 # arbitrary (for now)
         Client.placeMarketOrder(ticker,order_id,"BUY_ORDER",fill_amount,id)
     end
 end

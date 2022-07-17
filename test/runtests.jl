@@ -13,6 +13,6 @@ end
 #     num_MM = 30 # number of reserved ids set aside for market makers
 # )
 
-# num_traders, num_assets, rounds = 10, 2, 10
+# num_traders, num_assets, rounds = 10, 2, 1
 
 # ZT_run(num_traders, num_assets, rounds; parameters...)

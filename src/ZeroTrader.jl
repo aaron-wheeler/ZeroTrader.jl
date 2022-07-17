@@ -1,6 +1,6 @@
 module ZeroTrader
 
-using Brokerage, Distributions
+using Brokerage, Distributions, Random
 
 include("TraderResources.jl")
 include("OrderSampling.jl")
@@ -12,7 +12,7 @@ function ZT_run(num_traders, num_assets, rounds; username, password, init_cash_r
     assets = zeros(Float64, num_assets)
     stock_prices = zeros(Float64, num_assets)
     init_traders(num_traders, init_cash_range, init_shares_range, num_assets)
-    zero_trade(rounds, num_agents, num_MM, assets, stock_prices, num_assets)
+    zero_trade(rounds, num_traders, num_MM, assets, stock_prices, num_assets)
 end
 
 export ZT_run
