@@ -5,7 +5,7 @@ function init_traders(num_traders, init_cash_range, init_shares_range, num_asset
         name = "ZeroTrader $(i)"
         cash = rand(init_cash_range)
         holdings = Dict{Int64, Float64}()
-        for ticker in 1:num_assets # TODO: check consistency of sequence here
+        for ticker in 1:num_assets
             init_shares = rand(init_shares_range)
             holdings[ticker] = init_shares
         end

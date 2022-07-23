@@ -5,7 +5,7 @@ parameters = (
     username = "aaron",
     password = "password123",
     init_cash_range = 10000.0:0.01:30000.0,
-    init_shares_range = 0.0:0.01:20.0,
+    init_shares_range = 0.0:0.01:120.0,
     num_MM = 30 # number of reserved ids set aside for market makers
 )
 

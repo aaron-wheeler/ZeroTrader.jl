@@ -47,6 +47,10 @@ function ZT_run(num_traders, num_assets, market_open, market_close, parameters, 
             total_wealth = get_total_wealth(risky_wealth, id)
             risky_wealth_allocation = total_wealth * risk_fraction
             pick_stocks(num_assets, risky_wealth_allocation, assets, stock_prices, id)
+            # check early exit condition
+            if Dates.now() > market_close
+                break
+            end
         end
     end
     @info "Trade sequence complete."
