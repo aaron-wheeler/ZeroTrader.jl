@@ -20,7 +20,7 @@ function ZT_run(num_traders, num_assets, market_open, market_close, parameters, 
     prob_activation = (pdf.(Pareto(1,1), time))[1:num_traders]
 
     # prepare recyclable trading vectors
-    assets = zeros(Float64, num_assets)
+    assets = zeros(Int64, num_assets)
     stock_prices = zeros(Float64, num_assets)
 
     # hold off trading until the market opens
@@ -40,7 +40,7 @@ function ZT_run(num_traders, num_assets, market_open, market_close, parameters, 
         shuffle!(trade_queue)
 
         # determine new risky wealth and place orders
-        for i in 1:length(trade_queue)
+        for i in eachindex(trade_queue)
             id = trade_queue[i] + num_MM
             risk_fraction = rand(Uniform())
             risky_wealth, assets, stock_prices = get_trade_details!(id, assets, stock_prices)
@@ -59,25 +59,21 @@ end
 function pick_stocks(num_assets, risky_wealth_allocation, assets, stock_prices, id)
     # determine portfolio weights
     portfolio_weights = rand(Dirichlet(num_assets, 1.0))
-    for i in 1:length(portfolio_weights)
-        if portfolio_weights[i] != 0.0
-            ticker = i
-            desired_shares = portfolio_weights[i] * (risky_wealth_allocation / stock_prices[i])
-            share_amount = desired_shares - assets[i]
-            place_order(ticker, share_amount, id)
-        else
-            continue
-        end
+    for i in eachindex(portfolio_weights)
+        ticker = i
+        desired_shares = floor(Int, portfolio_weights[i] * (risky_wealth_allocation / stock_prices[i]))
+        share_amount = desired_shares - assets[i]
+        place_order(ticker, share_amount, id)
     end
 end
 
 function place_order(ticker, share_amount, id)
-    if share_amount < 0.0
+    if share_amount < 0
         fill_amount = abs(share_amount)
-        order_id = 1111 # arbitrary (for now)
+        order_id = -1111 # arbitrary (for now)
         # println("SELL: trader = $(id), size = $(fill_amount), ticker = $(ticker).")
         Client.placeMarketOrder(ticker,order_id,"SELL_ORDER",fill_amount,id)
-    elseif share_amount > 0.0
+    elseif share_amount > 0
         fill_amount = share_amount
         order_id = 1111 # arbitrary (for now)
         # println("BUY: trader = $(id), size = $(fill_amount), ticker = $(ticker).")
