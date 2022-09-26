@@ -25,13 +25,13 @@ function ZT_run(num_traders, num_assets, market_open, market_close, parameters, 
 
     # hold off trading until the market opens
     if Dates.now() < market_open
-        @info "Waiting until market open..."
+        @info "(ZeroTrader) Waiting until market open..."
         pre_market_time = Dates.value(market_open - now()) / 1000 # convert to secs
         sleep(pre_market_time)
     end
 
     # execute trades until the market closes
-    @info "Initiating trade sequence now."
+    @info "(ZeroTrader) Initiating trade sequence now."
     while Dates.now() < market_close
         # probabilistic activation of traders
         trade_draw = (1 - rand(prob_activation)) * num_traders
@@ -53,7 +53,7 @@ function ZT_run(num_traders, num_assets, market_open, market_close, parameters, 
             end
         end
     end
-    @info "Trade sequence complete."
+    @info "(ZeroTrader) Trade sequence complete."
 end
 
 function pick_stocks(num_assets, risky_wealth_allocation, assets, stock_prices, id)
