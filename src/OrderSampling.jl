@@ -1,8 +1,8 @@
 using Brokerage, Distributions, Dates, Random
 
-function ZT_run(num_traders, num_assets, market_open, market_close, parameters, server_info)
+function ZT_run!(num_traders, num_assets, market_open, market_close, parameters, server_info)
     # unpack parameters
-    username, password, init_cash_range, init_shares_range, num_MM = parameters
+    username, password, init_cash_range, init_shares_range, prob_wait, trade_freq, num_MM = parameters
     host_ip_address, port = server_info
 
     # connect to brokerage
@@ -41,6 +41,10 @@ function ZT_run(num_traders, num_assets, market_open, market_close, parameters, 
 
         # determine new risky wealth and place orders
         for i in eachindex(trade_queue)
+            # wait 'trade_freq' seconds
+            if rand() <= prob_wait
+                sleep(trade_freq)
+            end
             id = trade_queue[i] + num_MM
             risk_fraction = rand(Uniform())
             risky_wealth, assets, stock_prices = get_trade_details!(id, assets, stock_prices)
