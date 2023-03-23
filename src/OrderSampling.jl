@@ -74,13 +74,11 @@ end
 function place_order(ticker, share_amount, id)
     if share_amount < 0
         fill_amount = abs(share_amount)
-        order_id = -1111 # arbitrary (for now)
         # println("SELL: trader = $(id), size = $(fill_amount), ticker = $(ticker).")
-        Client.placeMarketOrder(ticker,order_id,"SELL_ORDER",fill_amount,id)
+        Client.placeMarketOrder(ticker,"SELL_ORDER",fill_amount,id)
     elseif share_amount > 0
         fill_amount = share_amount
-        order_id = 1111 # arbitrary (for now)
         # println("BUY: trader = $(id), size = $(fill_amount), ticker = $(ticker).")
-        Client.placeMarketOrder(ticker,order_id,"BUY_ORDER",fill_amount,id)
+        Client.placeMarketOrder(ticker,"BUY_ORDER",fill_amount,id)
     end
 end
