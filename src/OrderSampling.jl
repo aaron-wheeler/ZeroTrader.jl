@@ -1,6 +1,6 @@
 using Brokerage, Distributions, Dates, Random
 
-function ZT_run!(num_traders, num_assets, market_open, market_close, parameters, server_info)
+function ZT_run(num_traders, num_assets, market_open, market_close, parameters, server_info; print_msg=false)
     # unpack parameters
     username, password, init_cash_range, init_shares_range, prob_wait, trade_freq, num_MM = parameters
     host_ip_address, port = server_info
@@ -50,7 +50,7 @@ function ZT_run!(num_traders, num_assets, market_open, market_close, parameters,
             risky_wealth, assets, stock_prices = get_trade_details!(id, assets, stock_prices)
             total_wealth = get_total_wealth(risky_wealth, id)
             risky_wealth_allocation = total_wealth * risk_fraction
-            pick_stocks(num_assets, risky_wealth_allocation, assets, stock_prices, id)
+            pick_stocks(num_assets, risky_wealth_allocation, assets, stock_prices, id, print_msg)
             # check early exit condition
             if Dates.now() > market_close
                 break
@@ -60,25 +60,25 @@ function ZT_run!(num_traders, num_assets, market_open, market_close, parameters,
     @info "(ZeroTrader) Trade sequence complete."
 end
 
-function pick_stocks(num_assets, risky_wealth_allocation, assets, stock_prices, id)
+function pick_stocks(num_assets, risky_wealth_allocation, assets, stock_prices, id, print_msg)
     # determine portfolio weights
     portfolio_weights = rand(Dirichlet(num_assets, 1.0))
     for i in eachindex(portfolio_weights)
         ticker = i
         desired_shares = floor(Int, portfolio_weights[i] * (risky_wealth_allocation / stock_prices[i]))
         share_amount = desired_shares - assets[i]
-        place_order(ticker, share_amount, id)
+        place_order(ticker, share_amount, id, print_msg)
     end
 end
 
-function place_order(ticker, share_amount, id)
+function place_order(ticker, share_amount, id, print_msg)
     if share_amount < 0
         fill_amount = abs(share_amount)
-        # println("SELL: trader = $(id), size = $(fill_amount), ticker = $(ticker).")
+        print_msg == true ? println("SELL: trader = $(id), size = $(fill_amount), ticker = $(ticker).") : nothing
         Client.placeMarketOrder(ticker,"SELL_ORDER",fill_amount,id)
     elseif share_amount > 0
         fill_amount = share_amount
-        # println("BUY: trader = $(id), size = $(fill_amount), ticker = $(ticker).")
+        print_msg == true ? println("BUY: trader = $(id), size = $(fill_amount), ticker = $(ticker).") : nothing
         Client.placeMarketOrder(ticker,"BUY_ORDER",fill_amount,id)
     end
 end
